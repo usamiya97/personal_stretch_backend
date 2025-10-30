@@ -3,6 +3,8 @@ package com.example.personal_stretch_api.controller;
 import com.example.personal_stretch_api.service.TrainersService;
 import com.example.personal_stretch_api.dto.TrainersDTO;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1")
 public class TrainerRegisterController {
+    private static final Logger logger = LoggerFactory.getLogger(TrainerRegisterController.class);
+
 
     private final TrainersService trainersService;
 
@@ -25,15 +29,13 @@ public class TrainerRegisterController {
     }
 
 
-    @PostMapping("register")
+    @PostMapping("trainers")
     public ResponseEntity<?> setTrainers(@RequestBody TrainersDTO trainersDTO) {
         try {
+            // 管理者登録
             trainersService.set(trainersDTO);
-
-
-        } catch (IllegalArgumentException e) {
-            
-
+        } catch (IllegalArgumentException e) { 
+            logger.error("管理者登録失敗しました");
         }
 
         return ResponseEntity.ok(Map.of(
