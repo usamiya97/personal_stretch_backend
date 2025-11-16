@@ -34,6 +34,7 @@ public class TrainersService {
         String hashPassword = passwordEncoder.encode(trainersDTO.adminPassword());
         trainers.setAdminName(trainersDTO.adminName());
         trainers.setAdminPassword(hashPassword);
+        trainers.setRoleId(1);
 
         trainersRepository.save(trainers);
     }
@@ -46,7 +47,7 @@ public class TrainersService {
             String hashedPassword = trainers.get().getAdminPassword();
             return checkPassword(rawPassword, hashedPassword);
         }
-        return false;   
+        return false;
     }
 
     // アクセストークン取得

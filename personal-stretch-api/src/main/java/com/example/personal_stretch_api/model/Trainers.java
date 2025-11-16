@@ -23,4 +23,7 @@ public class Trainers {
 
     @Column(name = "admin_password")
     private String adminPassword;
+
+    @Column(name = "role_id")
+    private Integer roleId;
 }

@@ -3,17 +3,13 @@ package com.example.personal_stretch_api.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.personal_stretch_api.config.JwtUtil;
 import com.example.personal_stretch_api.dto.TrainersDTO;
 import com.example.personal_stretch_api.service.TrainersService;
 
-import java.time.Duration;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
