@@ -22,14 +22,14 @@ public class Customers {
     @Id
     private long id;
 
-    @Column(name = "customers_name")
-    private String customersName;
+    @Column(name = "customer_name")
+    private String customerName;
 
-    @Column(name = "customers_email")
-    private String customersEmail;
+    @Column(name = "customer_email")
+    private String customerEmail;
 
-    @Column(name = "customers_phone_number")
-    private String customersPhoneNumber;
+    @Column(name = "customer_phone_number")
+    private String customerPhoneNumber;
 
     @Column(name = "created_at")
     @CreationTimestamp

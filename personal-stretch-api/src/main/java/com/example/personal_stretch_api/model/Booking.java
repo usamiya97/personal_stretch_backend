@@ -25,7 +25,7 @@ public class Booking {
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
-    private Custemers customers;
+    private Customers customers;
 
     @Column(name = "status")
     private String status;
@@ -42,5 +42,8 @@ public class Booking {
     @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    @Column(name = "choise_stretch")
+    private int choiseStretch;
     
 }
