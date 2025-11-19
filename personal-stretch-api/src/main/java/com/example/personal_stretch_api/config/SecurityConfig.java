@@ -43,6 +43,11 @@ public class SecurityConfig {
                     "/api/v1/trainers", 
                     "/api/v1/refresh"
                 ).permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/trainers").hasRole("OWNER")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/trainers/**").hasRole("OWNER")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/trainers/**").hasRole("OWNER")
+
+                .requestMatchers("/api/v1/bookings/**").hasAnyRole("OWNER", "TRAINER")
                 // それ以外は認証必須
                 .anyRequest().authenticated()
             )

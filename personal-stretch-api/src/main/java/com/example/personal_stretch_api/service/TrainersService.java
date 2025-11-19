@@ -4,25 +4,41 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.personal_stretch_api.config.JwtUtil;
 import com.example.personal_stretch_api.dto.TrainersDTO;
+import com.example.personal_stretch_api.model.Role;
 import com.example.personal_stretch_api.model.Trainers;
+import com.example.personal_stretch_api.repository.RoleRepository;
 import com.example.personal_stretch_api.repository.TrainersRepository;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Service
 public class TrainersService {
     private final TrainersRepository trainersRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final RoleRepository roleRepository;
 
-    public TrainersService (TrainersRepository trainersRepository,PasswordEncoder passwordEncoder,JwtUtil jwtUtil) {
-        this.trainersRepository = trainersRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
+    public TrainersService 
+        (
+            TrainersRepository trainersRepository,
+            PasswordEncoder passwordEncoder,
+            JwtUtil jwtUtil,
+            RoleRepository roleRepository
+        ) {
+            this.trainersRepository = trainersRepository;
+            this.passwordEncoder = passwordEncoder;
+            this.jwtUtil = jwtUtil;
+            this.roleRepository = roleRepository;
     }
 
     public void set(TrainersDTO trainersDTO) {
@@ -52,8 +68,13 @@ public class TrainersService {
 
     // アクセストークン取得
     public String getAccessToken(TrainersDTO trainersDTO) {
+        Trainers trainer = trainersRepository.findByAdminName(trainersDTO.adminName())
+            .orElseThrow(() -> new JwtException("User not found in DB."));
+
+        Optional<Role> role = roleRepository.findById(trainer.getRoleId());
+        String roleName = "ROLE_" + role.get().getRoleName();
         // セキュリティ JWT生成
-        String accessToken = jwtUtil.generateAccessToken(trainersDTO.adminName(),List.of("USER"));
+        String accessToken = jwtUtil.generateAccessToken(trainersDTO.adminName(),List.of(roleName));
 
         return accessToken;
     }
@@ -81,6 +102,42 @@ public class TrainersService {
 
     private boolean checkPassword(String rawPassword,String hashedPassword) {
         return passwordEncoder.matches(rawPassword, hashedPassword);
+    }
+
+    // アクセストークン発行
+    public String refreshAccessToken(String refreshToken, HttpServletResponse response) {
+        // 1. RTの検証 (ここでJwtExceptionが出る可能性がある)
+        Jws<Claims> claims = jwtUtil.parse(refreshToken);
+        String username = claims.getBody().getSubject();
+    
+        // 2. ユーザーが存在するか確認 (DBルックアップ)
+        Trainers trainer = trainersRepository.findByAdminName(username)
+            .orElseThrow(() -> new JwtException("User not found in DB."));
+
+        Optional<Role> role = roleRepository.findById(trainer.getRoleId());
+        String roleName = "ROLE_" + role.get().getRoleName();
+    
+        // 3. 新しいATを生成
+        String newAccessToken = jwtUtil.generateAccessToken(username, List.of(roleName)); 
+        
+        // (オプション) 4. RTをローテーション（再発行）する場合
+        // セキュリティ強化のため、RTも更新して新しいCookieをセットする
+        String newRefreshToken = jwtUtil.generateRefreshToken(username);
+        ResponseCookie refreshCookie = createRefreshCookie(newRefreshToken);
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+        
+        return newAccessToken;
+    }
+
+    // Cookieをクリアするためのユーティリティメソッドも追加
+    public void clearRefreshCookie(HttpServletResponse response) {
+        ResponseCookie expiredCookie = ResponseCookie.from("refresh_token", "")
+            .httpOnly(true)
+            .secure(true) // 本番環境ではtrue
+            .path("/")
+            .maxAge(0) // 有効期限をゼロにして削除
+            .build();
+        response.addHeader(HttpHeaders.SET_COOKIE, expiredCookie.toString());
     }
     
 }
