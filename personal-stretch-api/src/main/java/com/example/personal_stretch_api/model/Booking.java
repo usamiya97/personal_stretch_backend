@@ -21,7 +21,7 @@ public class Booking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
@@ -34,10 +34,10 @@ public class Booking {
     private String message;
 
     @Column(name = "first_choice_datetime")
-    private LocalDateTime firstChoiceDate;
+    private LocalDateTime firstChoiceDateTime;
 
     @Column(name = "second_choice_datetime")
-    private LocalDateTime secondChoiceDate;
+    private LocalDateTime secondChoiceDateTime;
 
     @Column(name = "created_at")
     @CreationTimestamp

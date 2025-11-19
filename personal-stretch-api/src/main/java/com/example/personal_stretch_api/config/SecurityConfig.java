@@ -41,7 +41,8 @@ public class SecurityConfig {
                     HttpMethod.POST,
                     "/api/v1/login", 
                     "/api/v1/trainers", 
-                    "/api/v1/refresh"
+                    "/api/v1/refresh",
+                    "/api/v1/bookings"
                 ).permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/trainers").hasRole("OWNER")
                 .requestMatchers(HttpMethod.PUT, "/api/v1/trainers/**").hasRole("OWNER")
@@ -59,7 +60,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // Next.jsのURL
+        configuration.setAllowedOrigins(List.of("http://localhost:3000","http://localhost:3001")); // Next.jsのURL
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true); // CookieやJWTを使う場合はtrue
