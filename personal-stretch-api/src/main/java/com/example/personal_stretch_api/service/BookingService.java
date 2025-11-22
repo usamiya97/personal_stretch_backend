@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.example.personal_stretch_api.dto.BookingFormDTO;
+import com.example.personal_stretch_api.dto.DetailBooking;
 import com.example.personal_stretch_api.model.Booking;
 import com.example.personal_stretch_api.model.Customers;
 import com.example.personal_stretch_api.repository.BookingRepository;
@@ -83,6 +84,10 @@ public class BookingService {
         booking.setCustomers(savedCustomer);
         
         return booking;
+    }
+
+    public void updateBookingData(DetailBooking detailBooking) {
+        bookingRepository.updateData(detailBooking);
     }
     
 }
