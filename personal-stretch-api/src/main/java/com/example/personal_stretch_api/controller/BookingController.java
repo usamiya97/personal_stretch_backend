@@ -1,7 +1,6 @@
 package com.example.personal_stretch_api.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.personal_stretch_api.dto.BookingFormDTO;
@@ -15,7 +14,6 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -55,19 +53,19 @@ public class BookingController {
         }
     }
 
-    @PatchMapping("/detailBooking")
+    @PutMapping("/detailBooking")
     public ResponseEntity<?> DetailBookingGet(@RequestBody DetailBooking detailBooking) {
 
         try {
             // 予約顧客情報登録
             bookingService.updateBookingData(detailBooking);
 
-            return ResponseEntity.ok(Map.of("success","保存に成功しました。"));
+            return ResponseEntity.ok(Map.of("success","更新に成功しました。"));
 
         } catch (Exception e) {
             System.out.println("エラー" + e);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(Map.of("message", "保存に失敗しました。"));
+                .body(Map.of("message", "更新に失敗しました。"));
         }
     }
     

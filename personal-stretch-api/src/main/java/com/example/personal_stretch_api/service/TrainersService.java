@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.personal_stretch_api.config.JwtUtil;
 import com.example.personal_stretch_api.dto.TrainersDTO;
@@ -22,6 +23,7 @@ import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Service
+@Transactional
 public class TrainersService {
     private final TrainersRepository trainersRepository;
     private final PasswordEncoder passwordEncoder;

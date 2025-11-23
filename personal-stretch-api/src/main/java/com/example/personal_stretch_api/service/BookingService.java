@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.personal_stretch_api.dto.BookingFormDTO;
 import com.example.personal_stretch_api.dto.DetailBooking;
@@ -15,6 +16,7 @@ import com.example.personal_stretch_api.repository.BookingRepository;
 import com.example.personal_stretch_api.repository.CustomerRepository;
 
 @Service
+@Transactional
 public class BookingService {
 
     private final BookingRepository bookingRepository;
@@ -87,7 +89,28 @@ public class BookingService {
     }
 
     public void updateBookingData(DetailBooking detailBooking) {
-        bookingRepository.updateData(detailBooking);
+        Booking booking = bookingRepository.findById(detailBooking.id())
+            .orElseThrow(() -> new RuntimeException("予約が見つかりません。"));
+        
+        String status = colorChangeStatus(detailBooking.color());
+        LocalDateTime dateTime = LocalDateTime.parse(detailBooking.start());
+        booking.setStatus(status);
+        booking.setFirstChoiceDateTime(dateTime);
+        booking.setChoiseStretch(detailBooking.stretchCourse());
+        bookingRepository.save(booking);
+    }
+
+    private String colorChangeStatus(String color) {
+        switch (color) {
+            case "#22c55e":
+                return "CONFIRMED";         
+            case "#f59e0b":
+                return "PENDING";
+            case "#3b82f6":
+                return "COMPLETE";
+            default:
+                return "CANCELLED";
+        }
     }
     
 }
