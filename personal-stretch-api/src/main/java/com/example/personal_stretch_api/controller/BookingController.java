@@ -68,6 +68,4 @@ public class BookingController {
                 .body(Map.of("message", "更新に失敗しました。"));
         }
     }
-    
-    
 }
