@@ -1,6 +1,5 @@
 package com.example.personal_stretch_api.dto;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record BookingUserDTO(

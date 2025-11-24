@@ -3,7 +3,6 @@ package com.example.personal_stretch_api.controller;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
