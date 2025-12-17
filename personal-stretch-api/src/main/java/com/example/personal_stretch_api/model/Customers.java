@@ -31,6 +31,9 @@ public class Customers {
     @Column(name = "customer_phone_number")
     private String customerPhoneNumber;
 
+    @Column(name = "customer_memo")
+    private String customerMemo;
+
     @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
