@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.personal_stretch_api.dto.BookingFormDTO;
 import com.example.personal_stretch_api.dto.DetailBooking;
+import com.example.personal_stretch_api.dto.SetBookingFormDTO;
 import com.example.personal_stretch_api.model.Booking;
 import com.example.personal_stretch_api.service.BookingService;
 
@@ -68,4 +69,12 @@ public class BookingController {
                 .body(Map.of("message", "更新に失敗しました。"));
         }
     }
+
+    @PostMapping("/setBooking")
+    public ResponseEntity<?> setBooking(@RequestBody SetBookingFormDTO setBookingFormDTO) {
+
+        bookingService.setBooking(setBookingFormDTO);
+        return ResponseEntity.ok(Map.of("success","登録成功"));
+    }
+    
 }

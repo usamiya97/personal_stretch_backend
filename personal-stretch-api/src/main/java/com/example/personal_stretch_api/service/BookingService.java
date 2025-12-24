@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.personal_stretch_api.dto.BookingFormDTO;
 import com.example.personal_stretch_api.dto.DetailBooking;
+import com.example.personal_stretch_api.dto.SetBookingFormDTO;
 import com.example.personal_stretch_api.model.Booking;
 import com.example.personal_stretch_api.model.Customers;
 import com.example.personal_stretch_api.repository.BookingRepository;
@@ -97,6 +98,34 @@ public class BookingService {
         booking.setStatus(status);
         booking.setFirstChoiceDateTime(dateTime);
         booking.setChoiseStretch(detailBooking.stretchCourse());
+        bookingRepository.save(booking);
+    }
+
+    /**
+     * 既存のユーザーの予約を登録
+     */
+    public void setBooking(SetBookingFormDTO setBookingFormDTO) {
+        // 該当のユーザーIDを取得する
+        Customers customer = customerRepository.findById(setBookingFormDTO.id().longValue())
+            .orElseThrow(() -> new RuntimeException("顧客が見つかりません。ID: " + setBookingFormDTO.id()));
+        
+        // 予約日時を作成
+        LocalDate bookingDate = LocalDate.parse(setBookingFormDTO.bookingDate());
+        LocalTime startTime = LocalTime.parse(setBookingFormDTO.startTime());
+        LocalDateTime bookingDateTime = LocalDateTime.of(bookingDate, startTime);
+        
+        Integer course = setBookingFormDTO.course();
+        String statusColor = colorChangeStatus(setBookingFormDTO.status());
+        
+        // Bookingエンティティを作成
+        Booking booking = new Booking();
+        booking.setFirstChoiceDateTime(bookingDateTime);
+        booking.setChoiseStretch(course);
+        booking.setStatus(statusColor);
+        booking.setCreatedAt(LocalDateTime.now());
+        booking.setCustomers(customer);
+        
+        // DBにBooking情報を保存
         bookingRepository.save(booking);
     }
 
