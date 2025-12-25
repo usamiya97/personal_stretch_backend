@@ -110,16 +110,14 @@ public class BookingService {
             .orElseThrow(() -> new RuntimeException("顧客が見つかりません。ID: " + setBookingFormDTO.id()));
         
         // 予約日時を作成
-        LocalDate bookingDate = LocalDate.parse(setBookingFormDTO.bookingDate());
-        LocalTime startTime = LocalTime.parse(setBookingFormDTO.startTime());
-        LocalDateTime bookingDateTime = LocalDateTime.of(bookingDate, startTime);
+        LocalDateTime bookingDate = LocalDateTime.parse(setBookingFormDTO.bookingDate());
         
         Integer course = setBookingFormDTO.course();
         String statusColor = colorChangeStatus(setBookingFormDTO.status());
         
         // Bookingエンティティを作成
         Booking booking = new Booking();
-        booking.setFirstChoiceDateTime(bookingDateTime);
+        booking.setFirstChoiceDateTime(bookingDate);
         booking.setChoiseStretch(course);
         booking.setStatus(statusColor);
         booking.setCreatedAt(LocalDateTime.now());
