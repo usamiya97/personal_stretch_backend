@@ -31,6 +31,10 @@ public class UserService {
         Customers customers = new Customers();
         LocalDateTime now = LocalDateTime.now();
 
+        if (customerDTO.id() != null) {
+            customers.setId(customerDTO.id());
+        }
+
         customers.setCustomerName(customerDTO.name());
         customers.setCustomerEmail(customerDTO.email());
         customers.setCustomerPhoneNumber(customerDTO.phone());
@@ -38,5 +42,9 @@ public class UserService {
         customers.setCreatedAt(now);
 
         return customers;
+    }
+
+    public void updateCustomer(CustomerDTO customerDTO) {
+        userRepository.save(createCustomer(customerDTO));
     }
 }

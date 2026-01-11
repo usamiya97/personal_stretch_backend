@@ -34,12 +34,22 @@ public class UserController {
         return ResponseEntity.ok(Map.of("bookingUsers",bookingUsers));
     }
 
+    // 新規ユーザー登録
     @PostMapping("/setCustomer")
     public ResponseEntity<?> setCustomer(@RequestBody CustomerDTO customerDTO) {
         userService.setCustomer(customerDTO);
         
         return ResponseEntity.ok(Map.of("success","更新に成功しました。"));
     }
+
+    // 既存ユーザー更新
+    @PostMapping("/updateCustomer")
+    public ResponseEntity<?> updateCustomer(@RequestBody CustomerDTO customerDTO) {
+        userService.updateCustomer(customerDTO);
+        
+        return ResponseEntity.ok(Map.of("success","更新に成功しました。"));
+    }
+    
     
     
 }

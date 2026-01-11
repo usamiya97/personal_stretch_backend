@@ -9,7 +9,7 @@ public record BookingFormDTO(
     String choiceStretch,
     String secondChoiceDate,
     String secondChoiceTime,
-    String message,
+    String memo,
     String status
 ) {
 } 
