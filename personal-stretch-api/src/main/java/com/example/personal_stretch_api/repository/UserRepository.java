@@ -13,14 +13,19 @@ import com.example.personal_stretch_api.model.Customers;
 public interface UserRepository extends JpaRepository<Customers,Long>{
     
     @Query("""
-        SELECT new com.example.personal_stretch_api.dto.BookingUserDTO(
-            c.id,
-            c.customerName,
-            c.customerEmail,
-            c.customerPhoneNumber,
-            MAX(b.firstChoiceDateTime),
-            c.customerMemo,
-            COUNT(b.id)
+    SELECT new com.example.personal_stretch_api.dto.BookingUserDTO(
+        c.id,
+        c.customerName,
+        c.customerEmail,
+        c.customerPhoneNumber,
+        
+        MIN(CASE WHEN b.status = 'COMPLETE' THEN b.firstChoiceDateTime ELSE NULL END), 
+
+        MAX(CASE WHEN b.status = 'COMPLETE' THEN b.firstChoiceDateTime ELSE NULL END),
+
+        c.customerMemo,
+
+        SUM(CASE WHEN b.status = 'COMPLETE' THEN 1 ELSE 0 END)
         )
         FROM Customers c
         LEFT JOIN Booking b
@@ -32,7 +37,7 @@ public interface UserRepository extends JpaRepository<Customers,Long>{
             c.customerPhoneNumber,
             c.customerMemo
         ORDER BY
-            MAX(b.firstChoiceDateTime) DESC NULLS LAST
+            MAX(CASE WHEN b.status = 'COMPLETE' THEN b.firstChoiceDateTime ELSE NULL END) DESC NULLS LAST
     """)
     List<BookingUserDTO> findAllBookingUser();
 }
