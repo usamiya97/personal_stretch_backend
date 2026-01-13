@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.personal_stretch_api.dto.BookingUserDTO;
 import com.example.personal_stretch_api.dto.CustomerDTO;
-import com.example.personal_stretch_api.model.Customers;
 import com.example.personal_stretch_api.service.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

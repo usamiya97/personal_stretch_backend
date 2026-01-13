@@ -8,9 +8,11 @@ public record BookingUserDTO(
     String email,
     String phone,
     LocalDateTime firstVisitDate,
-    LocalDateTime lastVisitDate, // LocalDateTimeから日付のみに変換
+    LocalDateTime lastVisitDate,
+    LocalDateTime nextVisitDate,
     String memo,
-    Long visitCount
+    Long visitCount,
+    LocalDateTime createdAt
 ) {
     
 }

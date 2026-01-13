@@ -19,13 +19,17 @@ public interface UserRepository extends JpaRepository<Customers,Long>{
         c.customerEmail,
         c.customerPhoneNumber,
         
-        MIN(CASE WHEN b.status = 'COMPLETE' THEN b.firstChoiceDateTime ELSE NULL END), 
+        MIN(CASE WHEN b.status = 'CONFIRMED' THEN b.firstChoiceDateTime ELSE NULL END),  
+        
+        MAX(CASE WHEN b.status = 'CONFIRMED' THEN b.firstChoiceDateTime ELSE NULL END),
 
         MAX(CASE WHEN b.status = 'COMPLETE' THEN b.firstChoiceDateTime ELSE NULL END),
 
         c.customerMemo,
 
-        SUM(CASE WHEN b.status = 'COMPLETE' THEN 1 ELSE 0 END)
+        SUM(CASE WHEN b.status = 'CONFIRMED' THEN 1 ELSE 0 END),
+
+        c.createdAt
         )
         FROM Customers c
         LEFT JOIN Booking b
@@ -35,9 +39,10 @@ public interface UserRepository extends JpaRepository<Customers,Long>{
             c.customerName,
             c.customerEmail,
             c.customerPhoneNumber,
-            c.customerMemo
+            c.customerMemo,
+            c.createdAt
         ORDER BY
-            MAX(CASE WHEN b.status = 'COMPLETE' THEN b.firstChoiceDateTime ELSE NULL END) DESC NULLS LAST
+            MAX(CASE WHEN b.status = 'CONFIRMED' THEN b.firstChoiceDateTime ELSE NULL END) DESC NULLS LAST
     """)
     List<BookingUserDTO> findAllBookingUser();
 }
