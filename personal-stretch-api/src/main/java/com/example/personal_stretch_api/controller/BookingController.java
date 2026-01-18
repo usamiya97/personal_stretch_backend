@@ -74,7 +74,7 @@ public class BookingController {
     public ResponseEntity<?> setBooking(@RequestBody SetBookingFormDTO setBookingFormDTO) {
 
         bookingService.setBooking(setBookingFormDTO);
-        return ResponseEntity.ok(Map.of("success","登録成功"));
+        return ResponseEntity.ok(Map.of("success","予約完了"));
     }
     
 }
