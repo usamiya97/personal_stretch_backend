@@ -39,10 +39,10 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers(
                     HttpMethod.POST,
-                    "/api/v1/login", 
-                    "/api/v1/trainers", 
+                    "/api/v1/login",  
                     "/api/v1/refresh",
-                    "/api/v1/bookings"
+                    "/api/v1/bookings",
+                    "/api/v1/logout"
                 ).permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/trainers").hasRole("OWNER")
                 .requestMatchers(HttpMethod.PUT, "/api/v1/trainers/**").hasRole("OWNER")

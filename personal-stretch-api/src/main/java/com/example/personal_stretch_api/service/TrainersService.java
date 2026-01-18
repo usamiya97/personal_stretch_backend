@@ -135,9 +135,10 @@ public class TrainersService {
     public void clearRefreshCookie(HttpServletResponse response) {
         ResponseCookie expiredCookie = ResponseCookie.from("refresh_token", "")
             .httpOnly(true)
-            .secure(true) // 本番環境ではtrue
+            .secure(false) // 本番環境ではtrue
             .path("/")
             .maxAge(0) // 有効期限をゼロにして削除
+            .sameSite("Lax")
             .build();
         response.addHeader(HttpHeaders.SET_COOKIE, expiredCookie.toString());
     }

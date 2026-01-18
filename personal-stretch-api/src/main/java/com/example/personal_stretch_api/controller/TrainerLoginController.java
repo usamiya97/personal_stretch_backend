@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.personal_stretch_api.dto.TrainersDTO;
 import com.example.personal_stretch_api.service.TrainersService;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.util.Map;
 
 import org.springframework.http.HttpHeaders;
@@ -18,11 +20,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RequestMapping("/api/v1")
 @RestController
-public class TrainerLogin {
+public class TrainerLoginController {
 
     private final TrainersService trainersService;
 
-    public TrainerLogin(TrainersService trainersService) {
+    public TrainerLoginController(TrainersService trainersService) {
         this.trainersService = trainersService;
     }
 
@@ -44,4 +46,13 @@ public class TrainerLogin {
             .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
             .body(Map.of("accessToken",accessToken,"successLogin","ログインに成功しました。"));
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> trainerLogout(HttpServletResponse response) {
+
+        trainersService.clearRefreshCookie(response);
+        
+        return ResponseEntity.ok().body(Map.of("message", "ログアウトしました。"));
+    }
+    
 }

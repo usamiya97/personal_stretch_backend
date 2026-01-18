@@ -38,7 +38,7 @@ public class UserController {
     public ResponseEntity<?> setCustomer(@RequestBody CustomerDTO customerDTO) {
         userService.setCustomer(customerDTO);
         
-        return ResponseEntity.ok(Map.of("success","更新に成功しました。"));
+        return ResponseEntity.ok(Map.of("success","登録に成功しました。"));
     }
 
     // 既存ユーザー更新
@@ -48,7 +48,4 @@ public class UserController {
         
         return ResponseEntity.ok(Map.of("success","更新に成功しました。"));
     }
-    
-    
-    
 }
