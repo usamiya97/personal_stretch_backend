@@ -41,7 +41,6 @@ public class SecurityConfig {
                     HttpMethod.POST,
                     "/api/v1/login",  
                     "/api/v1/refresh",
-                    "/api/v1/bookings",
                     "/api/v1/logout"
                 ).permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/trainers").hasRole("OWNER")

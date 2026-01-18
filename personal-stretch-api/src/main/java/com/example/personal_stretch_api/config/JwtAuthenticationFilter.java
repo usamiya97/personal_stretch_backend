@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -47,11 +48,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
                         roles == null ? List.of() :
                                 roles.stream().map(SimpleGrantedAuthority::new).toList());
                 SecurityContextHolder.getContext().setAuthentication(auth);
+            } catch (ExpiredJwtException e) {
+                logger.warn("JWT token is expired");
+                handleException(response, "TOKEN_EXPIRED", "セッションが期限切れです。再ログインしてください。");
+                return; // ★重要: ここで処理を止める！
             } catch (JwtException e) {
                 // トークンが無効な場合は、ログ出力などを行い、認証情報をクリアする
                 // これにより、認証失敗として扱われる
                 logger.warn("JWTトークンの検証に失敗しました", e);
                 SecurityContextHolder.clearContext();
+                handleException(response, "INVALID_TOKEN", "無効なトークンです。再度ログインしてください。");
+                return;
             }
         }
         filterChain.doFilter(request, response);
@@ -68,6 +75,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
         }
         return null;
     }
+
+    private void handleException(HttpServletResponse response, String code, String message) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401固定
+        response.setContentType("application/json;charset=UTF-8");
+        // フロントが判定しやすいように、独自のコード(TOKEN_EXPIRED)を混ぜるのがベスト
+        String json = String.format("{\"code\":\"%s\", \"message\":\"%s\"}", code, message);
+        response.getWriter().write(json);
+    }
 }
-
-
