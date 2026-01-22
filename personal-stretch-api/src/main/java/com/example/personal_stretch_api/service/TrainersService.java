@@ -142,5 +142,10 @@ public class TrainersService {
             .build();
         response.addHeader(HttpHeaders.SET_COOKIE, expiredCookie.toString());
     }
+
+    // 管理者取得
+    public List<Trainers> getAdminUsers() {
+        return trainersRepository.findAll();
+    }
     
 }

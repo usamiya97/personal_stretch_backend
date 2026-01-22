@@ -1,5 +1,7 @@
 package com.example.personal_stretch_api.model;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,4 +28,7 @@ public class Trainers {
 
     @Column(name = "role_id")
     private Integer roleId;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 }
