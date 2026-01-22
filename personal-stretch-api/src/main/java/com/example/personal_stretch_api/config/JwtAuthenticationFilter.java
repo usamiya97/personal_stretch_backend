@@ -51,7 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
             } catch (ExpiredJwtException e) {
                 logger.warn("JWT token is expired");
                 handleException(response, "TOKEN_EXPIRED", "セッションが期限切れです。再ログインしてください。");
-                return; // ★重要: ここで処理を止める！
+                return;
             } catch (JwtException e) {
                 // トークンが無効な場合は、ログ出力などを行い、認証情報をクリアする
                 // これにより、認証失敗として扱われる

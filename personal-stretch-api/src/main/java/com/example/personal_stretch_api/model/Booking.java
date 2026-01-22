@@ -2,8 +2,6 @@ package com.example.personal_stretch_api.model;
 
 import java.time.LocalDateTime;
 
-import org.hibernate.annotations.CreationTimestamp;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,7 +38,6 @@ public class Booking {
     private LocalDateTime secondChoiceDateTime;
 
     @Column(name = "created_at")
-    @CreationTimestamp
     private LocalDateTime createdAt;
 
     @Column(name = "choise_stretch")
