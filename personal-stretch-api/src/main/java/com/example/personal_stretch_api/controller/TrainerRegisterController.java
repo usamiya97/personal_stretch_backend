@@ -11,7 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,13 +35,26 @@ public class TrainerRegisterController {
     }
 
 
-    @PostMapping("trainers")
+    @PostMapping("/setTrainers")
     public ResponseEntity<?> setTrainers(@RequestBody TrainersDTO trainersDTO) {
         try {
             // 管理者登録
             trainersService.set(trainersDTO);
         } catch (IllegalArgumentException e) { 
             logger.error("管理者登録失敗しました");
+        }
+
+        return ResponseEntity.ok(Map.of(
+               "success","成功"));
+    }
+
+    @DeleteMapping("/trainers/{id}")
+    public ResponseEntity<?> deleteTrainers(@PathVariable Long id) {
+        try {
+            // 管理者登録
+            trainersService.delete(id);
+        } catch (IllegalArgumentException e) { 
+            logger.error("管理者削除失敗しました");
         }
 
         return ResponseEntity.ok(Map.of(

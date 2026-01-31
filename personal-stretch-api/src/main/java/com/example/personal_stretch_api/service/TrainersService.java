@@ -1,6 +1,7 @@
 package com.example.personal_stretch_api.service;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,9 +51,11 @@ public class TrainersService {
     private void createTrainerEntity(TrainersDTO trainersDTO) {
         Trainers trainers = new Trainers();
         String hashPassword = passwordEncoder.encode(trainersDTO.adminPassword());
+        LocalDateTime now = LocalDateTime.now();
         trainers.setAdminName(trainersDTO.adminName());
         trainers.setAdminPassword(hashPassword);
-        trainers.setRoleId(1);
+        trainers.setRoleId(trainersDTO.role_id());
+        trainers.setCreatedAt(now);
 
         trainersRepository.save(trainers);
     }
@@ -146,6 +149,10 @@ public class TrainersService {
     // 管理者取得
     public List<Trainers> getAdminUsers() {
         return trainersRepository.findAll();
+    }
+
+    public void delete(Long trainerId) {
+        trainersRepository.deleteById(trainerId);
     }
     
 }
