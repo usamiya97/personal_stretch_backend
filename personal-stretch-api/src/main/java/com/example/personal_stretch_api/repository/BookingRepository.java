@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.example.personal_stretch_api.model.Booking;
 
 @Repository
-public interface BookingRepository extends JpaRepository<Booking,Integer>{
-
+public interface BookingRepository extends JpaRepository<Booking,Long>{
 
 }
