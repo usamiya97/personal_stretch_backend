@@ -30,7 +30,7 @@ public class Notification {
 
     @Column(name = "notification_type", nullable = false)
     @Enumerated(EnumType.STRING) // 文字列としてDBに保存
-    private NotificationType notification_type; // NEW, CANCEL, REMINDER
+    private NotificationType notificationType; // NEW, CANCEL, REMINDER
 
     @Column(name = "message")
     private String message;
