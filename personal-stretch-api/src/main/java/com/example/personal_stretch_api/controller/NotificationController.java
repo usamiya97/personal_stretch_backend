@@ -42,13 +42,13 @@ public class NotificationController {
     }
 
     // PUT: 指定した通知を既読にする
-    @PutMapping("/{id}/read")
+    @PutMapping("/notification/{id}/read")
     public void markAsRead(@PathVariable Long id) {
         notificationService.markAsRead(id);
     }
     
     // PUT: 全て既読にする
-    @PutMapping("/read-all")
+    @PutMapping("/notification/read-all")
     public void markAllAsRead() {
         notificationService.markAllAsRead();
     }
