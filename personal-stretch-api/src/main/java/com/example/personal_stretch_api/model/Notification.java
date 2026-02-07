@@ -32,16 +32,29 @@ public class Notification {
     @Enumerated(EnumType.STRING) // 文字列としてDBに保存
     private NotificationType notificationType; // NEW, CANCEL, REMINDER
 
-    @Column(name = "message")
-    private String message;
-
     @Column(name = "is_read")
     private boolean isRead = false;
+
+    @Column(name = "booking_date")
+    private LocalDateTime bookingDate;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     public enum NotificationType {
-        NEW, CANCEL, TODAY, TOMORROW
+        NEW("予約が入りました"),
+        CANCEL("予約がキャンセルされました"),
+        TODAY("本日の予約があります"),
+        TOMORROW("明日の予約があります");
+
+        private final String defaultMessage;
+
+        NotificationType(String defaultMessage) {
+            this.defaultMessage = defaultMessage;
+        }
+
+        public String getDefaultMessage() {
+            return defaultMessage;
+        }
     }
 }

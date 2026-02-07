@@ -27,7 +27,6 @@ public class NotificationService {
         Notification notification = new Notification();
         notification.setBooking(booking);
         notification.setNotificationType(type);
-        notification.setMessage(message);
         
         notificationRepository.save(notification);
     }

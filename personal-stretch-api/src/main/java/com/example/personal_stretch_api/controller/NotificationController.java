@@ -32,7 +32,7 @@ public class NotificationController {
     @GetMapping("/notification")
     public ResponseEntity<?> getNotifications() {
         // DTOへの変換ロジックは省略（Entityをそのまま返すと循環参照などのリスクがあるためDTO推奨）
-        List<NotificationDTO> notifications = notificationRepository.findAllByOrderByCreatedAtDesc().stream()
+        List<NotificationDTO> notifications = notificationRepository.findAllWithDetails().stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
         
@@ -56,20 +56,24 @@ public class NotificationController {
     private NotificationDTO convertToDto(Notification entity) {
         // nullチェックなどは適宜追加
         String title = "";
+        String customerName = "不明な顧客";
+        String message = entity.getNotificationType().getDefaultMessage();
         if (entity.getBooking() != null) {
-             // Bookingエンティティにtitleフィールドがない場合は、
-             // getCustomer().getName() + "様" など、表示したい文字列を作る
-             // 今回は仮に "予約ID: " + id とします
-             title = "予約ID: " + entity.getBooking().getId();
+            // Bookingエンティティにtitleフィールドがない場合は、
+            // getCustomer().getName() + "様" など、表示したい文字列を作る
+            // 今回は仮に "予約ID: " + id とします
+            title = "予約ID: " + entity.getBooking().getId();
+            customerName = entity.getBooking().getCustomers().getCustomerName() + "様";
         }
 
         return new NotificationDTO(
             entity.getId(),
             entity.getBooking() != null ? entity.getBooking().getId() : null,
-            title,
+            customerName,
+            message,
             entity.getNotificationType(),
-            entity.getMessage(),
             entity.isRead(),
+            entity.getBookingDate(),
             entity.getCreatedAt()
         );
     }

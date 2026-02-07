@@ -7,10 +7,11 @@ import com.example.personal_stretch_api.model.Notification.NotificationType;
 public record NotificationDTO(
     Long id,
     Long bookingId,
-    String bookingTitle,
-    NotificationType notificationType, // NEW, CANCEL, REMINDER
+    String customerName,
     String message,
+    NotificationType notificationType, // NEW, CANCEL, REMINDER
     boolean isRead,
+    LocalDateTime bookingDate,
     LocalDateTime createdAt
 ) {
     
