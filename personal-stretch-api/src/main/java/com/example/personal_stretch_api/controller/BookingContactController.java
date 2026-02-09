@@ -21,7 +21,7 @@ public class BookingContactController {
         this.bookingService = bookingService;
     }
 
-    @PostMapping("/bookings")
+    @PostMapping("/booking-contacts")
     public ResponseEntity<?> setBooking(@RequestBody SetBookingFormDTO setBookingFormDTO) {
 
         bookingService.setBooking(setBookingFormDTO);
