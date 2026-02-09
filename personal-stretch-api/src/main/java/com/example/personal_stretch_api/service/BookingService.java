@@ -89,8 +89,8 @@ public class BookingService {
         return booking;
     }
 
-    public void updateBookingData(DetailBooking detailBooking) {
-        Booking booking = bookingRepository.findById(detailBooking.id())
+    public void updateBookingData(Long id, DetailBooking detailBooking) {
+        Booking booking = bookingRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("予約が見つかりません。"));
         
         String status = colorChangeStatus(detailBooking.color());

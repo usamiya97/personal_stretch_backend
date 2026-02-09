@@ -55,14 +55,12 @@ public class NotificationController {
 
     private NotificationDTO convertToDto(Notification entity) {
         // nullチェックなどは適宜追加
-        String title = "";
         String customerName = "不明な顧客";
         String message = entity.getNotificationType().getDefaultMessage();
         if (entity.getBooking() != null) {
             // Bookingエンティティにtitleフィールドがない場合は、
             // getCustomer().getName() + "様" など、表示したい文字列を作る
             // 今回は仮に "予約ID: " + id とします
-            title = "予約ID: " + entity.getBooking().getId();
             customerName = entity.getBooking().getCustomers().getCustomerName() + "様";
         }
 
