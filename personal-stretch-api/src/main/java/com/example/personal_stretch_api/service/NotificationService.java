@@ -1,5 +1,6 @@
 package com.example.personal_stretch_api.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -27,6 +28,20 @@ public class NotificationService {
         Notification notification = new Notification();
         notification.setBooking(booking);
         notification.setNotificationType(type);
+        notification.setBookingDate(booking.getFirstChoiceDateTime());
+        notification.setCreatedAt(LocalDateTime.now());
+        
+        notificationRepository.save(notification);
+    }
+
+    // 通知を作成するメソッド（Bookingエンティティを直接受け取る版）
+    @Transactional
+    public void createNotification(Booking booking, Notification.NotificationType type) {
+        Notification notification = new Notification();
+        notification.setBooking(booking);
+        notification.setNotificationType(type);
+        notification.setBookingDate(booking.getFirstChoiceDateTime());
+        notification.setCreatedAt(LocalDateTime.now());
         
         notificationRepository.save(notification);
     }

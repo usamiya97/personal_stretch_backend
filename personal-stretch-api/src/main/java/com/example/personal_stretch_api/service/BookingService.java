@@ -13,6 +13,7 @@ import com.example.personal_stretch_api.dto.DetailBooking;
 import com.example.personal_stretch_api.dto.SetBookingFormDTO;
 import com.example.personal_stretch_api.model.Booking;
 import com.example.personal_stretch_api.model.Customers;
+import com.example.personal_stretch_api.model.Notification;
 import com.example.personal_stretch_api.repository.BookingRepository;
 import com.example.personal_stretch_api.repository.CustomerRepository;
 
@@ -22,10 +23,12 @@ public class BookingService {
 
     private final BookingRepository bookingRepository;
     private final CustomerRepository customerRepository;
+    private final NotificationService notificationService;
 
-    public BookingService(BookingRepository bookingRepository,CustomerRepository customerRepository) {
+    public BookingService(BookingRepository bookingRepository, CustomerRepository customerRepository, NotificationService notificationService) {
         this.bookingRepository = bookingRepository;
         this.customerRepository = customerRepository;
+        this.notificationService = notificationService;
     }
 
     public List<Booking> getBookings() {
@@ -39,7 +42,10 @@ public class BookingService {
 
         Booking booking = createBookingData(bookingFormDTO, savedCustomer);
         // DBにBooking情報を保存
-        bookingRepository.save(booking);
+        Booking savedBooking = bookingRepository.save(booking);
+        
+        // 通知を作成
+        notificationService.createNotification(savedBooking, Notification.NotificationType.NEW);
     }
 
     // Customerエンティティ作成
@@ -124,7 +130,10 @@ public class BookingService {
         booking.setCustomers(customer);
         
         // DBにBooking情報を保存
-        bookingRepository.save(booking);
+        Booking savedBooking = bookingRepository.save(booking);
+        
+        // 通知を作成
+        notificationService.createNotification(savedBooking, Notification.NotificationType.NEW);
     }
 
     private String colorChangeStatus(String color) {
