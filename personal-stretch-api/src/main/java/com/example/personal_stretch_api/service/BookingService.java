@@ -139,5 +139,10 @@ public class BookingService {
                 return "CANCELLED";
         }
     }
+
+    // 予約削除
+    public void deleteBookingData(Long id) {
+        bookingRepository.deleteById(id);
+    }
     
 }

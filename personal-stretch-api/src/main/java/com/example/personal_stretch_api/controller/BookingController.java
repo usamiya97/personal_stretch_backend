@@ -13,6 +13,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,6 +68,22 @@ public class BookingController {
             System.out.println("エラー" + e);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("message", "更新に失敗しました。"));
+        }
+    }
+
+    @DeleteMapping("/bookings/{id}")
+    public ResponseEntity<?> DeleteBooking(@PathVariable Long id) {
+
+        try {
+            // 予約顧客情報登録
+            bookingService.deleteBookingData(id);
+
+            return ResponseEntity.ok(Map.of("success","削除に成功しました。"));
+
+        } catch (Exception e) {
+            System.out.println("エラー" + e);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("message", "削除に失敗しました。"));
         }
     }
 }
