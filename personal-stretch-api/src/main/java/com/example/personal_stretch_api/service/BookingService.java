@@ -133,7 +133,7 @@ public class BookingService {
                 return "CONFIRMED";         
             case "#f59e0b":
                 return "PENDING";
-            case "#3b82f6":
+            case "#7b7b7b":
                 return "COMPLETE";
             default:
                 return "CANCELLED";
