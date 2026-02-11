@@ -129,11 +129,11 @@ public class BookingService {
 
     private String colorChangeStatus(String color) {
         switch (color) {
-            case "#22c55e":
+            case "#7b7b7b":
                 return "CONFIRMED";         
             case "#f59e0b":
                 return "PENDING";
-            case "#7b7b7b":
+            case "#3b82f6":
                 return "COMPLETE";
             default:
                 return "CANCELLED";
