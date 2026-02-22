@@ -24,7 +24,7 @@ import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class TrainersService {
     private final TrainersRepository trainersRepository;
     private final PasswordEncoder passwordEncoder;
@@ -44,6 +44,7 @@ public class TrainersService {
             this.roleRepository = roleRepository;
     }
 
+    @Transactional
     public void set(TrainersDTO trainersDTO) {
         createTrainerEntity(trainersDTO);
     }
@@ -151,6 +152,7 @@ public class TrainersService {
         return trainersRepository.findAll();
     }
 
+    @Transactional
     public void delete(Long trainerId) {
         trainersRepository.deleteById(trainerId);
     }

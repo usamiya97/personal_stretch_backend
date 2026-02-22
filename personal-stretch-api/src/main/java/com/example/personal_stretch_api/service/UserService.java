@@ -10,6 +10,8 @@ import com.example.personal_stretch_api.dto.CustomerDTO;
 import com.example.personal_stretch_api.model.Customers;
 import com.example.personal_stretch_api.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class UserService {
 
@@ -23,6 +25,7 @@ public class UserService {
         return userRepository.findAllBookingUser();
     }
 
+    @Transactional
     public void setCustomer(CustomerDTO customerDTO) {
         userRepository.save(createCustomer(customerDTO));
     }
@@ -44,6 +47,7 @@ public class UserService {
         return customers;
     }
 
+    @Transactional
     public void updateCustomer(CustomerDTO customerDTO) {
         userRepository.save(createCustomer(customerDTO));
     }

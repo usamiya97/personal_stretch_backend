@@ -27,5 +27,4 @@ public class BookingContactController {
         bookingService.setBooking(setBookingFormDTO);
         return ResponseEntity.ok(Map.of("success","予約完了"));
     }
-    
 }

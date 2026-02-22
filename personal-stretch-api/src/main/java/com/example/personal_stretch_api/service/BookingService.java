@@ -18,7 +18,7 @@ import com.example.personal_stretch_api.repository.BookingRepository;
 import com.example.personal_stretch_api.repository.CustomerRepository;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class BookingService {
 
     private final BookingRepository bookingRepository;
@@ -45,6 +45,7 @@ public class BookingService {
         return bookingRepository.findByFirstChoiceDateTimeGreaterThanEqualAndFirstChoiceDateTimeLessThan(start, end);
     }
 
+    @Transactional
     public void RegistContactForm(BookingFormDTO bookingFormDTO) {
         Customers customer = createCustomerData(bookingFormDTO);
         // DBにCustomer情報を保存
@@ -59,6 +60,7 @@ public class BookingService {
     }
 
     // Customerエンティティ作成
+    @Transactional
     private Customers createCustomerData(BookingFormDTO bookingFormDTO) {
         Customers customer = new Customers();
         customer.setCustomerName(bookingFormDTO.name());
@@ -68,11 +70,13 @@ public class BookingService {
     }
 
     // Bookingエンティティ作成
+    @Transactional
     private Booking createBookingData(BookingFormDTO bookingFormDTO,Customers savedCustomer) {
         LocalDateTime now = LocalDateTime.now();
 
-        LocalDate firstDate = LocalDate.parse(bookingFormDTO.firstChoiceDate()); // "2025-11-20"
-        LocalTime firstTime = LocalTime.parse(bookingFormDTO.firstChoiceTime()); //
+        LocalDate firstDate = LocalDate.parse(bookingFormDTO.firstChoiceDate());
+        LocalTime firstTime = LocalTime.parse(bookingFormDTO.firstChoiceTime());
+
         // 第一希望日時作成
         LocalDateTime firstDateTime = LocalDateTime.of(firstDate,firstTime);
 
@@ -105,6 +109,7 @@ public class BookingService {
         return booking;
     }
 
+    @Transactional
     public void updateBookingData(Long id, DetailBooking detailBooking) {
         Booking booking = bookingRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("予約が見つかりません。"));
@@ -120,6 +125,7 @@ public class BookingService {
     /**
      * 既存のユーザーの予約を登録
      */
+    @Transactional
     public void setBooking(SetBookingFormDTO setBookingFormDTO) {
         // 該当のユーザーIDを取得する
         Customers customer = customerRepository.findById(setBookingFormDTO.id().longValue())
@@ -160,6 +166,7 @@ public class BookingService {
     }
 
     // 予約削除
+    @Transactional
     public void deleteBookingData(Long id) {
         bookingRepository.deleteById(id);
     }
