@@ -35,15 +35,12 @@ public class NotificationController {
         List<NotificationDTO> notifications = notificationRepository.findAllWithDetails().stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
-        
-        System.out.println("デバッグ"  + notifications);
-
         return ResponseEntity.ok(Map.of("notifications",notifications));
     }
 
     // PUT: 指定した通知を既読にする
     @PutMapping("/notification/{id}/read")
-    public void markAsRead(@PathVariable Long id) {
+    public void markAsRead(@PathVariable("id") Long id) {
         notificationService.markAsRead(id);
     }
     

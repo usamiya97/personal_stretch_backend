@@ -49,7 +49,7 @@ public class TrainerRegisterController {
     }
 
     @DeleteMapping("/trainers/{id}")
-    public ResponseEntity<?> deleteTrainers(@PathVariable Long id) {
+    public ResponseEntity<?> deleteTrainers(@PathVariable("id") Long id) {
         try {
             // 管理者登録
             trainersService.delete(id);
