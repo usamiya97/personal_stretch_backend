@@ -35,6 +35,16 @@ public class BookingService {
         return bookingRepository.findAll();
     }
 
+    public List<Booking> getBookingsByRange(LocalDate startDate, LocalDate endDate) {
+       // 開始日の 00:00:00
+        LocalDateTime start = startDate.atStartOfDay();
+        
+        // 終了日の翌日の 00:00:00（終了日の一杯まで含めるため）
+        LocalDateTime end = endDate.plusDays(1).atStartOfDay();
+
+        return bookingRepository.findByFirstChoiceDateTimeGreaterThanEqualAndFirstChoiceDateTimeLessThan(start, end);
+    }
+
     public void RegistContactForm(BookingFormDTO bookingFormDTO) {
         Customers customer = createCustomerData(bookingFormDTO);
         // DBにCustomer情報を保存

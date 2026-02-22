@@ -1,6 +1,7 @@
 package com.example.personal_stretch_api.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.personal_stretch_api.dto.BookingFormDTO;
@@ -8,9 +9,11 @@ import com.example.personal_stretch_api.dto.DetailBooking;
 import com.example.personal_stretch_api.model.Booking;
 import com.example.personal_stretch_api.service.BookingService;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,10 +36,19 @@ public class BookingController {
     }
 
     @GetMapping("/bookings")
-    public ResponseEntity<?> getBookingList() {
-        List<Booking> bookingList = bookingService.getBookings();
-
-        return ResponseEntity.ok(Map.of("bookingList",bookingList));
+    public ResponseEntity<?> getBookingList(
+        @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+        @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ) {
+        if (startDate != null && endDate != null) {
+            // 月単位（指定期間）のデータを取得
+            List<Booking> rangeBookings = bookingService.getBookingsByRange(startDate, endDate);
+            return ResponseEntity.ok(Map.of("bookingList", rangeBookings));
+        } else {
+            // 指定がない場合は全件（またはデフォルトで今月分を返すなどの処理）
+            List<Booking> allBookings = bookingService.getBookings();
+            return ResponseEntity.ok(Map.of("bookingList", allBookings));
+        }
     }
 
     @PostMapping("/bookings")
@@ -56,7 +68,7 @@ public class BookingController {
     }
 
     @PutMapping("/bookings/{id}")
-    public ResponseEntity<?> DetailBookingGet(@PathVariable Long id, @RequestBody DetailBooking detailBooking) {
+    public ResponseEntity<?> DetailBookingGet(@PathVariable("id") Long id, @RequestBody DetailBooking detailBooking) {
 
         try {
             // 予約顧客情報登録
@@ -72,7 +84,7 @@ public class BookingController {
     }
 
     @DeleteMapping("/bookings/{id}")
-    public ResponseEntity<?> DeleteBooking(@PathVariable Long id) {
+    public ResponseEntity<?> DeleteBooking(@PathVariable("id") Long id) {
 
         try {
             // 予約顧客情報登録
