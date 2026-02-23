@@ -74,6 +74,21 @@ public class TrainersService {
         return true;
     }
 
+    public Optional<Role> getRoleName(TrainersDTO trainersDTO) {
+        String rawPassword = trainersDTO.adminPassword();
+        Trainers trainer = trainersRepository.findByAdminName(trainersDTO.adminName())
+            .orElseThrow(() -> new TrainerNotFoundException("ログインIDまたはパスワードが間違っています。"));
+
+        String hashedPassword = trainer.getAdminPassword();
+        if (!checkPassword(rawPassword, hashedPassword)) {
+            throw new TrainerNotFoundException("ログインIDまたはパスワードが間違っています。");
+        }
+
+        Optional<Role> roleName = roleRepository.findById(trainer.getRoleId());
+
+        return roleName;
+    }
+
     // アクセストークン取得
     public String getAccessToken(TrainersDTO trainersDTO) {
         Trainers trainer = trainersRepository.findByAdminName(trainersDTO.adminName())
