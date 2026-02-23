@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.personal_stretch_api.config.JwtUtil;
 import com.example.personal_stretch_api.dto.TrainersDTO;
+import com.example.personal_stretch_api.exception.TrainerNotFoundException;
 import com.example.personal_stretch_api.model.Role;
 import com.example.personal_stretch_api.model.Trainers;
 import com.example.personal_stretch_api.repository.RoleRepository;
@@ -63,13 +64,14 @@ public class TrainersService {
 
     public boolean loginCheck(TrainersDTO trainersDTO) {
         String rawPassword = trainersDTO.adminPassword();
-        Optional<Trainers> trainers = trainersRepository.findByAdminName(trainersDTO.adminName());
+        Trainers trainer = trainersRepository.findByAdminName(trainersDTO.adminName())
+            .orElseThrow(() -> new TrainerNotFoundException("ログインIDまたはパスワードが間違っています。"));
 
-        if (trainers.isPresent()) {
-            String hashedPassword = trainers.get().getAdminPassword();
-            return checkPassword(rawPassword, hashedPassword);
+        String hashedPassword = trainer.getAdminPassword();
+        if (!checkPassword(rawPassword, hashedPassword)) {
+            throw new TrainerNotFoundException("ログインIDまたはパスワードが間違っています。");
         }
-        return false;
+        return true;
     }
 
     // アクセストークン取得

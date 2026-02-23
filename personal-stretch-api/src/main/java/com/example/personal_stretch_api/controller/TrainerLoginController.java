@@ -7,6 +7,7 @@ import com.example.personal_stretch_api.dto.TrainersDTO;
 import com.example.personal_stretch_api.service.TrainersService;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public class TrainerLoginController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> trainersLogin(@RequestBody TrainersDTO trainersDTO) {
+    public ResponseEntity<?> trainersLogin(@Valid @RequestBody TrainersDTO trainersDTO) {
         boolean loginCheck = trainersService.loginCheck(trainersDTO);
 
         if (!loginCheck) {
