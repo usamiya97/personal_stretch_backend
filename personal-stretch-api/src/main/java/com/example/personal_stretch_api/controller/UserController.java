@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.personal_stretch_api.dto.BookingUserDTO;
 import com.example.personal_stretch_api.dto.CustomerDTO;
 import com.example.personal_stretch_api.service.UserService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -35,7 +38,7 @@ public class UserController {
 
     // 新規ユーザー登録
     @PostMapping("/setCustomer")
-    public ResponseEntity<?> setCustomer(@RequestBody CustomerDTO customerDTO) {
+    public ResponseEntity<?> setCustomer(@Valid @RequestBody CustomerDTO customerDTO) {
         userService.setCustomer(customerDTO);
         
         return ResponseEntity.ok(Map.of("success","登録に成功しました。"));
