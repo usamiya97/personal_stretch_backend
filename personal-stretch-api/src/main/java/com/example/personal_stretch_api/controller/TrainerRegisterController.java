@@ -1,6 +1,9 @@
 package com.example.personal_stretch_api.controller;
 
 import com.example.personal_stretch_api.service.TrainersService;
+
+import jakarta.validation.Valid;
+
 import com.example.personal_stretch_api.dto.TrainersDTO;
 import com.example.personal_stretch_api.model.Trainers;
 
@@ -36,7 +39,7 @@ public class TrainerRegisterController {
 
 
     @PostMapping("/setTrainers")
-    public ResponseEntity<?> setTrainers(@RequestBody TrainersDTO trainersDTO) {
+    public ResponseEntity<?> setTrainers(@Valid @RequestBody TrainersDTO trainersDTO) {
         try {
             // 管理者登録
             trainersService.set(trainersDTO);
