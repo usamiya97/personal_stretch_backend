@@ -31,4 +31,7 @@ public class Trainers {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @Column(name = "admin_email")
+    private String adminEmail;
 }

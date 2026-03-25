@@ -32,17 +32,15 @@ public class TrainersService {
     private final JwtUtil jwtUtil;
     private final RoleRepository roleRepository;
 
-    public TrainersService 
-        (
+    public TrainersService(
             TrainersRepository trainersRepository,
             PasswordEncoder passwordEncoder,
             JwtUtil jwtUtil,
-            RoleRepository roleRepository
-        ) {
-            this.trainersRepository = trainersRepository;
-            this.passwordEncoder = passwordEncoder;
-            this.jwtUtil = jwtUtil;
-            this.roleRepository = roleRepository;
+            RoleRepository roleRepository) {
+        this.trainersRepository = trainersRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
+        this.roleRepository = roleRepository;
     }
 
     @Transactional
@@ -65,7 +63,7 @@ public class TrainersService {
     public boolean loginCheck(TrainersDTO trainersDTO) {
         String rawPassword = trainersDTO.adminPassword();
         Trainers trainer = trainersRepository.findByAdminName(trainersDTO.adminName())
-            .orElseThrow(() -> new TrainerNotFoundException("ログインIDまたはパスワードが間違っています。"));
+                .orElseThrow(() -> new TrainerNotFoundException("ログインIDまたはパスワードが間違っています。"));
 
         String hashedPassword = trainer.getAdminPassword();
         if (!checkPassword(rawPassword, hashedPassword)) {
@@ -77,7 +75,7 @@ public class TrainersService {
     public Optional<Role> getRoleName(TrainersDTO trainersDTO) {
         String rawPassword = trainersDTO.adminPassword();
         Trainers trainer = trainersRepository.findByAdminName(trainersDTO.adminName())
-            .orElseThrow(() -> new TrainerNotFoundException("ログインIDまたはパスワードが間違っています。"));
+                .orElseThrow(() -> new TrainerNotFoundException("ログインIDまたはパスワードが間違っています。"));
 
         String hashedPassword = trainer.getAdminPassword();
         if (!checkPassword(rawPassword, hashedPassword)) {
@@ -92,12 +90,12 @@ public class TrainersService {
     // アクセストークン取得
     public String getAccessToken(TrainersDTO trainersDTO) {
         Trainers trainer = trainersRepository.findByAdminName(trainersDTO.adminName())
-            .orElseThrow(() -> new JwtException("User not found in DB."));
+                .orElseThrow(() -> new JwtException("User not found in DB."));
 
         Optional<Role> role = roleRepository.findById(trainer.getRoleId());
         String roleName = "ROLE_" + role.get().getRoleName();
         // セキュリティ JWT生成
-        String accessToken = jwtUtil.generateAccessToken(trainersDTO.adminName(),List.of(roleName));
+        String accessToken = jwtUtil.generateAccessToken(trainersDTO.adminName(), List.of(roleName));
 
         return accessToken;
     }
@@ -112,18 +110,18 @@ public class TrainersService {
 
     public ResponseCookie createRefreshCookie(String refresh) {
         ResponseCookie refreshCookie = ResponseCookie.from("refresh_token", refresh)
-            .httpOnly(true)
-            .secure(false)
-            .domain("")
-            .path("/") // もしくは "/auth/refresh" に限定
-            .sameSite("Lax")
-            .maxAge(Duration.ofDays(jwtUtil.getRefreshDays()))
-            .build();
-        
+                .httpOnly(true)
+                .secure(false)
+                .domain("")
+                .path("/") // もしくは "/auth/refresh" に限定
+                .sameSite("Lax")
+                .maxAge(Duration.ofDays(jwtUtil.getRefreshDays()))
+                .build();
+
         return refreshCookie;
     }
 
-    private boolean checkPassword(String rawPassword,String hashedPassword) {
+    private boolean checkPassword(String rawPassword, String hashedPassword) {
         return passwordEncoder.matches(rawPassword, hashedPassword);
     }
 
@@ -132,35 +130,35 @@ public class TrainersService {
         // 1. RTの検証 (ここでJwtExceptionが出る可能性がある)
         Jws<Claims> claims = jwtUtil.parse(refreshToken);
         String username = claims.getBody().getSubject();
-    
+
         // 2. ユーザーが存在するか確認 (DBルックアップ)
         Trainers trainer = trainersRepository.findByAdminName(username)
-            .orElseThrow(() -> new JwtException("User not found in DB."));
+                .orElseThrow(() -> new JwtException("User not found in DB."));
 
         Optional<Role> role = roleRepository.findById(trainer.getRoleId());
         String roleName = "ROLE_" + role.get().getRoleName();
-    
+
         // 3. 新しいATを生成
-        String newAccessToken = jwtUtil.generateAccessToken(username, List.of(roleName)); 
-        
+        String newAccessToken = jwtUtil.generateAccessToken(username, List.of(roleName));
+
         // (オプション) 4. RTをローテーション（再発行）する場合
         // セキュリティ強化のため、RTも更新して新しいCookieをセットする
         String newRefreshToken = jwtUtil.generateRefreshToken(username);
         ResponseCookie refreshCookie = createRefreshCookie(newRefreshToken);
         response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
-        
+
         return newAccessToken;
     }
 
     // Cookieをクリアするためのユーティリティメソッドも追加
     public void clearRefreshCookie(HttpServletResponse response) {
         ResponseCookie expiredCookie = ResponseCookie.from("refresh_token", "")
-            .httpOnly(true)
-            .secure(false) // 本番環境ではtrue
-            .path("/")
-            .maxAge(0) // 有効期限をゼロにして削除
-            .sameSite("Lax")
-            .build();
+                .httpOnly(true)
+                .secure(false) // 本番環境ではtrue
+                .path("/")
+                .maxAge(0) // 有効期限をゼロにして削除
+                .sameSite("Lax")
+                .build();
         response.addHeader(HttpHeaders.SET_COOKIE, expiredCookie.toString());
     }
 
@@ -173,5 +171,9 @@ public class TrainersService {
     public void delete(Long trainerId) {
         trainersRepository.deleteById(trainerId);
     }
-    
+
+    public void updateAdminUser(TrainersDTO trainersDTO) {
+        trainersRepository.updateAdminUser(trainersDTO.id(), trainersDTO.adminPassword());
+    }
+
 }

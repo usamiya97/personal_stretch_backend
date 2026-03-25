@@ -30,25 +30,23 @@ import org.springframework.web.bind.annotation.RestController;
 public class TrainerRegisterController {
     private static final Logger logger = LoggerFactory.getLogger(TrainerRegisterController.class);
 
-
     private final TrainersService trainersService;
 
     public TrainerRegisterController(TrainersService trainersService) {
         this.trainersService = trainersService;
     }
 
-
     @PostMapping("/setTrainers")
     public ResponseEntity<?> setTrainers(@Valid @RequestBody TrainersDTO trainersDTO) {
         try {
             // 管理者登録
             trainersService.set(trainersDTO);
-        } catch (IllegalArgumentException e) { 
+        } catch (IllegalArgumentException e) {
             logger.error("管理者登録失敗しました");
         }
 
         return ResponseEntity.ok(Map.of(
-               "success","成功"));
+                "success", "成功"));
     }
 
     @DeleteMapping("/trainers/{id}")
@@ -56,12 +54,12 @@ public class TrainerRegisterController {
         try {
             // 管理者登録
             trainersService.delete(id);
-        } catch (IllegalArgumentException e) { 
+        } catch (IllegalArgumentException e) {
             logger.error("管理者削除失敗しました");
         }
 
         return ResponseEntity.ok(Map.of(
-               "success","成功"));
+                "success", "成功"));
     }
 
     // 管理者ユーザー（トレーナー）を取得
@@ -70,6 +68,15 @@ public class TrainerRegisterController {
 
         List<Trainers> trainers = trainersService.getAdminUsers();
 
-        return ResponseEntity.ok(Map.of("trainers",trainers));
+        return ResponseEntity.ok(Map.of("trainers", trainers));
+    }
+
+    // 管理者ユーザーを編集
+    @PostMapping("/updateAdminUser")
+    public ResponseEntity<?> updateAdminUser(@RequestBody TrainersDTO trainersDTO) {
+
+        trainersService.updateAdminUser(trainersDTO);
+        return ResponseEntity.ok(Map.of(
+                "success", "成功"));
     }
 }
